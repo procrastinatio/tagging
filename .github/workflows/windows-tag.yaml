@@ -36,13 +36,13 @@ jobs:
         shell: bash -el {0}
         id: get_version
         run: |
-          echo "VERSION=$(echo ${GITHUB_REF} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+          echo "BRANCH_VERSION=$(echo ${GITHUB_REF} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
         env:
           GITHUB_REF: ${{ github.ref }}
           
       - name: Use Version in Build
         shell: bash -el {0}
-        run: echo "Building version $VERSION"
+        run: echo "Building version $BRANCH_VERSION"
           
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -59,19 +59,20 @@ jobs:
         run: |
             echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
             echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+            echo "v${{env.BRANCH_VERSION }}"
       
         
 
       - name: Get version from setuptools_scm
         shell: bash -el {0}
         id: version
-        run: echo "VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV   
+        run: echo "SCM_VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV   
         
       - name: Tag Release
         env:
           GIT_PAT: ${{ secrets.test_lg_swisstopo }}
         run: |
-          echo "v${{env.VERSION }}"
+          echo "v${{env.SCM_VERSION }}"
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
           git tag -a "v${{env.VERSION }}" -m "Release version ${{env.VERSION }}"
