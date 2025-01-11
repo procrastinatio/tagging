@@ -61,6 +61,8 @@ jobs:
         shell: bash -el {0}
         id: vars
         run: |
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions@github.com"
             echo "Current Branch: ${{ github.ref }}"
             echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
             echo "Tag name from github.ref_name: ${{  github.ref_name }}"
