@@ -36,16 +36,17 @@ jobs:
         shell: bash -el {0}
         id: get_version
         run: |
-          echo "BRANCH_VERSION=$(echo ${BRANCH_NAME} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=$(echo ${BRANCH_NAME} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
           echo "BRANCH_NAME: ${BRANCH_NAME}"
-          echo "BRANCH_NAME: ${{env.BRANCH_VERSION }}"
+          echo "RELEASE_VERSION: ${{env.RELEASE_VERSION }}"
         env:
+          # work for push and pr
           BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
 
           
       - name: Use Version in Build
         shell: bash -el {0}
-        run: echo "Building version $BRANCH_VERSION"
+        run: echo "Building version $RELEASE_VERSION"
           
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -63,7 +64,7 @@ jobs:
             echo "Current Branch: ${{ github.ref }}"
             echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
             echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-            echo "${{env.BRANCH_VERSION }}"
+            echo "Tag RELEASE_VERSION=${{env.RELEASE_VERSION }}"
       
         
 
@@ -79,8 +80,8 @@ jobs:
           echo "v${{env.SCM_VERSION }}"
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git tag -a "v${{env.VERSION }}" -m "Release version ${{env.VERSION }}"
-          git push origin "v${{env.VERSION }}"
+          git tag -a "v${{env.RELEASE_VERSION }}" -m "Release version ${{env.RELEASE_VERSION }}"
+          git push  https://$GIT_PAT@github.com/procrastinatio/tagging.git  refs/tags/v${{env.RELEASE_VERSION }}
         
       
      
