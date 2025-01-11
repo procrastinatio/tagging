@@ -80,19 +80,19 @@ jobs:
           git config --global user.email "actions@github.com"
       - name: Debug PAT
         shell: bash -el {0}
-        run: echo "${{ secrets.PAT_TOKEN }}" | wc -c
+        run: echo "${{ secrets.GIT_PAT }}" | wc -c
         
       - name: Tag Release
         shell: bash -el {0}
         env:
-          GIT_PAT: ${{ secrets.PAT_TOKEN }}
+          GIT_PAT: ${{ secrets.GIT_PAT }}
         run: |
           echo "v${{env.RELEASE_VERSION }}"
           git tag -a "v${{env.RELEASE_VERSION }}" -m "Release version ${{env.RELEASE_VERSION }}"
           
-          git push https://${{ secrets.PAT_TOKEN }}@github.com/procrastinatio/tagging.git  v${{env.RELEASE_VERSION }}
+          git push https://${{ secrets.GIT_PAT }}@github.com/procrastinatio/tagging.git  v${{env.RELEASE_VERSION }}
    
-          git push https://${{env.PAT_TOKEN}}@github.com/procrastinatio/tagging.git refs/tags/v${{env.RELEASE_VERSION }}
+          git push https://${{env.GIT_PAT}}@github.com/procrastinatio/tagging.git refs/tags/v${{env.RELEASE_VERSION }}
          
         
       
