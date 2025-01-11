@@ -71,16 +71,26 @@ jobs:
       - name: Get version from setuptools_scm
         shell: bash -el {0}
         id: version
-        run: echo "SCM_VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV   
+        run: echo "SCM_VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV  
+        
+      - name: Configure Git
+        shell: bash -el {0}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+      - name: Debug PAT
+         shell: bash -el {0}
+         run: echo "${{ secrets.test_lg_swisstopo }}" | wc -c
         
       - name: Tag Release
+        shell: bash -el {0}
         env:
           GIT_PAT: ${{ secrets.test_lg_swisstopo }}
         run: |
           echo "v${{env.RELEASE_VERSION }}"
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
           git tag -a "v${{env.RELEASE_VERSION }}" -m "Release version ${{env.RELEASE_VERSION }}"
+          
+          git push https://${{ secrets.test_lg_swisstopo }}@github.com/procrastinatio/tagging.git v${{env.RELEASE_VERSION }}
    
           git push https://${{env.GIT_PAT}}@github.com/procrastinatio/tagging.git refs/tags/v${{env.RELEASE_VERSION }}
          
