@@ -75,7 +75,7 @@ jobs:
         
       - name: Tag Release
         env:
-          GIT_PAT: ${{ secrets.test_lg_swisstopo }}
+          GIT_PAT: ${{ secrets.TEST_LG_SWISSTOPO }}
         run: |
           echo "v${{env.SCM_VERSION }}"
           git config --global user.name "github-actions"
