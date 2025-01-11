@@ -58,8 +58,8 @@ jobs:
           echo "v${{env.VERSION }}"
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          # git tag -a "v${{env.VERSION }}" -m "Release version ${{env.VERSION }}"
-          #git push origin "v${{env.VERSION }}"
+          git tag -a "v${{env.VERSION }}" -m "Release version ${{env.VERSION }}"
+          git push origin "v${{env.VERSION }}"
         
       
      
