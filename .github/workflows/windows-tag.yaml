@@ -36,7 +36,11 @@ jobs:
         shell: bash -el {0}
         id: get_version
         run: |
-          echo "BRANCH_VERSION=$(echo ${GITHUB_REF} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+          echo "BRANCH_VERSION=$(echo ${BRANCH_NAME} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+          echo "BRANCH_NAME: ${BRANCH_NAME}"
+          echo "BRANCH_NAME: ${{env.BRANCH_VERSION }}"
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
 
           
       - name: Use Version in Build
@@ -59,7 +63,7 @@ jobs:
             echo "Current Branch: ${{ github.ref }}"
             echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
             echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-            echo "v${{env.BRANCH_VERSION }}"
+            echo "${{env.BRANCH_VERSION }}"
       
         
 
