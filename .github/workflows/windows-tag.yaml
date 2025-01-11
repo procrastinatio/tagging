@@ -29,6 +29,17 @@ jobs:
       - name: Fetch tags
         run: |
             git fetch --tags
+            
+      - name: Get Version from Branch
+        shell: bash -el {0}
+        id: get_version
+        run: |
+          echo "VERSION=$(echo ${GITHUB_REF} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+        env:
+          GITHUB_REF: ${{ github.ref }}
+      - name: Use Version in Build
+        run: echo "Building version $VERSION"
+          
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
