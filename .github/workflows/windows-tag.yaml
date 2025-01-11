@@ -1,4 +1,4 @@
-name: Build Pyinstaller windows only
+name: Build and Tag
 
 on:
   push:
@@ -37,8 +37,7 @@ jobs:
         id: get_version
         run: |
           echo "BRANCH_VERSION=$(echo ${GITHUB_REF} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
-        env:
-          GITHUB_REF: ${{ github.ref }}
+
           
       - name: Use Version in Build
         shell: bash -el {0}
@@ -57,6 +56,7 @@ jobs:
         shell: bash -el {0}
         id: vars
         run: |
+            echo "Current Branch: ${{ github.ref }}"
             echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
             echo "Tag name from github.ref_name: ${{  github.ref_name }}"
             echo "v${{env.BRANCH_VERSION }}"
