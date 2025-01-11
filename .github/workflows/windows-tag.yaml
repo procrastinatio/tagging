@@ -82,7 +82,7 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git tag -a "v${{env.RELEASE_VERSION }}" -m "Release version ${{env.RELEASE_VERSION }}"
    
-          git push https://${{ env.PAT_TOKEN }}@github.com/procrastinatio/tagging.git refs/tags/v${{env.RELEASE_VERSION }}
+          git push https://${{env.GIT_PAT}}@github.com/procrastinatio/tagging.git refs/tags/v${{env.RELEASE_VERSION }}
          
         
       
