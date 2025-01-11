@@ -59,7 +59,7 @@ jobs:
 
       - name: Get version from setuptools_scm
         shell: bash -el {0}
-        id: get_version
+        id: version
         run: echo "VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV   
         
       - name: Tag Release
