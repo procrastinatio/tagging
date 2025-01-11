@@ -1,4 +1,4 @@
-name: Build Pyinstaller windows only
+name: Taggin version
 
 on:
   push:
