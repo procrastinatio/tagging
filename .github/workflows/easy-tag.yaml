@@ -32,28 +32,40 @@ jobs:
       if: github.ref == 'refs/heads/master'
       id: version
       run: |
-        # Get the version that would be released
         VERSION=$(semantic-release version --print)
         echo "Next version will be: $VERSION"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-    # For develop branch, use commit SHA
-    - name: Get Develop Version
-      if: github.ref == 'refs/heads/develop'
+    # For develop branch and PRs, use commit SHA and event type
+    - name: Get Development ID
+      if: github.ref != 'refs/heads/master'
       id: dev_version
       run: |
-        SHORT_SHA=$(git rev-parse --short HEAD)
-        echo "version=dev-$SHORT_SHA" >> $GITHUB_OUTPUT
+        SHA=$(git rev-parse --short HEAD)
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          ID="pr-${{ github.event.pull_request.number }}-$SHA"
+        else
+          ID="dev-$SHA"
+        fi
+        echo "version=$ID" >> $GITHUB_OUTPUT
 
-    # Upload artifacts with version in name
+    # Set artifact name based on context
+    - name: Set Artifact Name
+      id: artifact_name
+      run: |
+        if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          NAME="tagging-v${{ steps.version.outputs.version }}"
+        else
+          NAME="tagging-${{ steps.dev_version.outputs.version }}"
+        fi
+        echo "name=$NAME" >> $GITHUB_OUTPUT
+
+    # Upload artifacts with computed name
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.ref == 'refs/heads/master' && format('package-v{0}', steps.version.outputs.version) || format('package-{0}', steps.dev_version.outputs.version) }}
+        name: ${{ steps.artifact_name.outputs.name }}
         path: dist/*
-    
-
-
 
 
     # Only run semantic release on master branch
@@ -65,3 +77,14 @@ jobs:
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
         semantic-release publish
+    # Create GitHub Release with artifacts
+    - name: Create GitHub Release
+      if: github.ref == 'refs/heads/master'
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/*
+        name: v${{ steps.version.outputs.version }}
+        tag_name: v${{ steps.version.outputs.version }}
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_PAT }}
