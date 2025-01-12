@@ -1,0 +1,37 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build python-semantic-release
+
+
+
+    # Only run semantic release on master branch
+    - name: Semantic Release
+      if: github.ref == 'refs/heads/master'
+      env:
+        GH_TOKEN: ${{ secrets.GIT_PAT }}
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        semantic-release publish

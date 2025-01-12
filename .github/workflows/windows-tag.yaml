@@ -1,14 +1,16 @@
-name: Build Pyinstaller windows only
+name: Build and Tag
 
 on:
   push:
     branches:
       - master
+
     tags:
       - '*'
   pull_request:
     branches:
       - develop
+      - master
 
 jobs:
   build:
@@ -30,20 +32,27 @@ jobs:
         run: |
             git fetch --tags
             
-      - name: Get Version from Branch
+      - name: Get Version from Branch name
         shell: bash -el {0}
         id: get_version
         run: |
-          echo "VERSION=$(echo ${GITHUB_REF} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+          echo "RELEASE_VERSION=$(echo ${BRANCH_NAME} | grep -oP 'release/\K\d+\.\d+\.\d+')" >> $GITHUB_ENV
+          echo "BRANCH_NAME: ${BRANCH_NAME}"
+          echo "RELEASE_VERSION: ${{env.RELEASE_VERSION }}"
         env:
-          GITHUB_REF: ${{ github.ref }}
+          # work for push and pr
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+
+          
       - name: Use Version in Build
-        run: echo "Building version $VERSION"
+        shell: bash -el {0}
+        run: echo "Building version $RELEASE_VERSION"
           
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
            python-version: '3.11'
+           
       - name: Install dependencies
         run: python -m pip install --upgrade pip setuptools wheel  setuptools setuptools_scm 
     
@@ -52,25 +61,37 @@ jobs:
         shell: bash -el {0}
         id: vars
         run: |
+            git config --global user.name "github-actions"
+            git config --global user.email "github-actions@github.com"
+            echo "Current Branch: ${{ github.ref }}"
             echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
             echo "Tag name from github.ref_name: ${{  github.ref_name }}"
+            echo "Tag RELEASE_VERSION=${{env.RELEASE_VERSION }}"
       
         
 
       - name: Get version from setuptools_scm
         shell: bash -el {0}
         id: version
-        run: echo "VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV   
+        run: echo "SCM_VERSION=$(python -c 'import setuptools_scm; print(setuptools_scm.get_version())')" >> $GITHUB_ENV  
+        
+ 
+      - name: Debug PAT
+        shell: bash -el {0}
+        run: echo "${{ secrets.GIT_PAT }}" | wc -c
         
       - name: Tag Release
+        shell: bash -el {0}
         env:
-          GIT_PAT: ${{ secrets.test_lg_swisstopo }}
+          GIT_PAT: ${{ secrets.GIT_PAT }}
         run: |
-          echo "v${{env.VERSION }}"
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git tag -a "v${{env.VERSION }}" -m "Release version ${{env.VERSION }}"
-          git push origin "v${{env.VERSION }}"
+          echo "v${{env.RELEASE_VERSION }}"
+          git tag -a "v${{env.RELEASE_VERSION }}" -m "Release version ${{env.RELEASE_VERSION }}"
+          
+          git push https://${{ secrets.GIT_PAT }}@github.com/procrastinatio/tagging.git  v${{env.RELEASE_VERSION }}
+   
+          git push https://${{env.GIT_PAT}}@github.com/procrastinatio/tagging.git refs/tags/v${{env.RELEASE_VERSION }}
+         
         
       
      
