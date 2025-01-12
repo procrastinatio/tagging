@@ -24,6 +24,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install build python-semantic-release
         pip install -U setuptools setuptools_scm wheel
+
+    - name: Debug Version Before
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Content of src/tagging/__init__.py:"
+        cat src/tagging/__init__.py
+        echo "Git status:"
+        git status
         
     # For master branch, run semantic-release first to update version
     - name: Semantic Release
@@ -38,6 +47,14 @@ jobs:
         VERSION=$(semantic-release version --print)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         semantic-release publish
+        
+    - name: Debug Version After
+      if: github.ref == 'refs/heads/master'
+      run: |
+        echo "Content of src/tagging/__init__.py after release:"
+        cat src/tagging/__init__.py
+        echo "Git status:"
+        git status
 
     # For develop/PR, get version identifier
     - name: Get Development ID
