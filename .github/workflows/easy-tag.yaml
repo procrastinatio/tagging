@@ -28,9 +28,9 @@ jobs:
 
     # Only run semantic release on master branch
     - name: Semantic Release
-      if: github.ref == 'refs/heads/master'
+      #if: github.ref == 'refs/heads/master'
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GIT_PAT }}
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
