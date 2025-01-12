@@ -25,10 +25,10 @@ jobs:
         pip install build python-semantic-release
     
     - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: tagging
-          path: |
+      uses: actions/upload-artifact@v4
+      with:
+        name: tagging
+        path: |
             dist/*
 
 
