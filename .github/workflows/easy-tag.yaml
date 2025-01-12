@@ -46,7 +46,7 @@ jobs:
         git config --global url."https://${{ secrets.GIT_PAT }}@github.com/".insteadOf "https://github.com/"
         VERSION=$(semantic-release version --print)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo '__version__="$VERSION"' > src/tagging/__init__.py
+        echo '__version__="0.2.5"' > src/tagging/__init__.py
         semantic-release publish
         
     - name: Debug Version After
