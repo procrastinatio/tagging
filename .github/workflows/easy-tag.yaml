@@ -37,19 +37,8 @@ jobs:
         VERSION=$(semantic-release version --print)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         semantic-release publish
-        
-    
-      
-    # Get version for master branch
-    - name: Get Next Version
-      if: github.ref == 'refs/heads/master'
-      id: version
-      run: |
-        VERSION=$(semantic-release version --print)
-        echo "Next version will be: $VERSION"
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-    # For develop branch and PRs, use commit SHA and event type
+    # For develop/PR, get version identifier
     - name: Get Development ID
       if: github.ref != 'refs/heads/master'
       id: dev_version
@@ -61,16 +50,19 @@ jobs:
           ID="dev-$SHA"
         fi
         echo "version=$ID" >> $GITHUB_OUTPUT
-        
+
+    # Build package AFTER version update
     - name: Build package
-      run: python -m build
+      run: |
+          python -m build
+          echo "VERSION is: $(cat src/tagging/__init__.py )"
 
     # Set artifact name based on context
     - name: Set Artifact Name
       id: artifact_name
       run: |
         if [ "${{ github.ref }}" = "refs/heads/master" ]; then
-          NAME="tagging-v${{ steps.version.outputs.version }}"
+          NAME="tagging-v${{ steps.release.outputs.version }}"
         else
           NAME="tagging-${{ steps.dev_version.outputs.version }}"
         fi
@@ -78,7 +70,7 @@ jobs:
 
     # Upload artifacts with computed name
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.artifact_name.outputs.name }}
         path: dist/*
