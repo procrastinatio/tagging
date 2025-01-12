@@ -1,1 +1,1 @@
-__version__='0.0.4'
+__version__ = "0.1.0"  # Must be in this exact format with double quotes
