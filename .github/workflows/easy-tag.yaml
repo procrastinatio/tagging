@@ -1,5 +1,10 @@
 name: Build and Release
 
+# Add explicit permissions
+permissions:
+  contents: write
+  pull-requests: write
+
 on:
   push:
     branches: [ master, develop ]
