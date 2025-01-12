@@ -25,7 +25,7 @@ package-dir = {"" = "src"}
 
 
 [tool.setuptools.dynamic]
-version = {attr = "src/tagging.__version__"}
+version = {attr = "tagging.__version__"}
 
 #[tool.setuptools_scm]
 # For smarter version schemes and other configuration options,
@@ -34,7 +34,7 @@ version = {attr = "src/tagging.__version__"}
 
 
 [semantic_release]
-version_variable = "tagging/__init__.py:__version__"
+version_variable = "src/tagging/__init__.py:__version__"
 branch = "master"
 upload_to_pypi = false
 build_command = "python -m build"
