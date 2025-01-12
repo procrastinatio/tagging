@@ -47,7 +47,7 @@ jobs:
 
     # Upload artifacts with version in name
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ github.ref == 'refs/heads/master' && format('package-v{0}', steps.version.outputs.version) || format('package-{0}', steps.dev_version.outputs.version) }}
         path: dist/*
