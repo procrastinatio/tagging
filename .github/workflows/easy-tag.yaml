@@ -53,7 +53,9 @@ jobs:
 
     # Build package AFTER version update
     - name: Build package
-      run: python -m build
+      run: |
+          python -m build
+          echo "VERSION is: $(cat src/tagging/__init__.py )"
 
     # Set artifact name based on context
     - name: Set Artifact Name
