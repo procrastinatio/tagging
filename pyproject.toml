@@ -25,7 +25,7 @@ package-dir = {"" = "src"}
 
 
 [tool.setuptools.dynamic]
-version = {attr = "tagging.__version__"}
+version = {attr = "src/tagging.__version__"}
 
 #[tool.setuptools_scm]
 # For smarter version schemes and other configuration options,
