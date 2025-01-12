@@ -1,18 +1,28 @@
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-
 [project]
-name = "tagging"
+name = "your-package"
 dynamic = ["version"]
+description = "A brief description of your package"
+readme = "README.md"
+license = {file = "LICENSE"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"},
+    {name = "Your Name", email = "your.email@example.com"}
 ]
-description = "Your package description"
 requires-python = ">=3.8"
-# ... other metadata
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[tool.setuptools]
+packages = ["tagging"]
+package-dir = {"" = "src"}
+
 
 [tool.setuptools.dynamic]
 version = {attr = "tagging.__version__"}
