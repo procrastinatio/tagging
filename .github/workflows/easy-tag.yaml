@@ -24,6 +24,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install build python-semantic-release
         pip install -U setuptools setuptools_scm wheel
+        
+    # For master branch, run semantic-release first to update version
+    - name: Semantic Release
+      if: github.ref == 'refs/heads/master'
+      id: release
+      env:
+        GH_TOKEN: ${{ secrets.GIT_PAT }}
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@github.com"
+        VERSION=$(semantic-release version --print)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        semantic-release publish
+        
     
       
     # Get version for master branch
@@ -70,15 +84,7 @@ jobs:
         path: dist/*
 
 
-    # Only run semantic release on master branch
-    - name: Semantic Release
-      if: github.ref == 'refs/heads/master'
-      env:
-        GH_TOKEN: ${{ secrets.GIT_PAT }}
-      run: |
-        git config --global user.name "github-actions"
-        git config --global user.email "github-actions@github.com"
-        semantic-release publish
+
     # Create GitHub Release with artifacts
     - name: Create GitHub Release
       if: github.ref == 'refs/heads/master'
