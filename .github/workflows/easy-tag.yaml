@@ -118,7 +118,6 @@ jobs:
         path: dist/*
 
 
-
     # Create GitHub Release with artifacts
     - name: Create GitHub Release
       if: github.ref == 'refs/heads/master'
