@@ -7,3 +7,10 @@ build-backend = "setuptools.build_meta"
 # For smarter version schemes and other configuration options,
 # check out https://github.com/pypa/setuptools_scm
 version_scheme = "no-guess-dev"
+
+
+[semantic_release]
+version_variable = tagging/__init__.py:__version__
+branch = master
+upload_to_pypi = false
+build_command = python -m build
