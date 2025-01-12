@@ -34,6 +34,7 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@github.com"
+        git config --global url."https://${{ secrets.GIT_PAT }}@github.com/".insteadOf "https://github.com/"
         VERSION=$(semantic-release version --print)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         semantic-release publish

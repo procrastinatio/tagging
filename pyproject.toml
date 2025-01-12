@@ -30,7 +30,9 @@ version = {attr = "tagging.__version__"}
 
 
 [semantic_release]
-version_variable = "src/tagging/__init__.py:__version__"
+version_variable = ["src/tagging/__init__.py:__version__"]  # Note: this should be a list
+version_toml = ["pyproject.toml:project.version"]  # Add this to update pyproject.toml too
+version_pattern = ["(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"]
+build_command = "python -m build"
 branch = "master"
 upload_to_pypi = false
-build_command = "python -m build"
