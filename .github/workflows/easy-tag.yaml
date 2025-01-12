@@ -45,7 +45,7 @@ jobs:
       if: github.ref == 'refs/heads/master'
       id: version
       env:
-        GITHUB_TOKEN: ${{ secrets.GIT_PAT }}
+        GH_TOKEN: ${{ secrets.GIT_PAT }}
       run: |
         # Get next version
         VERSION=$(semantic-release version --print)
