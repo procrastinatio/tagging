@@ -4,7 +4,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "your-package"
+name = "tagging"
 dynamic = ["version"]
 description = "A brief description of your package"
 readme = "README.md"
@@ -27,14 +27,10 @@ package-dir = {"" = "src"}
 [tool.setuptools.dynamic]
 version = {attr = "tagging.__version__"}
 
-#[tool.setuptools_scm]
-# For smarter version schemes and other configuration options,
-# check out https://github.com/pypa/setuptools_scm
-#version_scheme = "no-guess-dev"
 
 
 [semantic_release]
-version_variable = "tagging/__init__.py:__version__"
+version_variable = "src/tagging/__init__.py:__version__"
 branch = "master"
 upload_to_pypi = false
 build_command = "python -m build"
