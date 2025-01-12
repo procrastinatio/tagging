@@ -112,7 +112,7 @@ jobs:
 
     # Upload artifacts with computed name
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ steps.artifact_name.outputs.name }}
         path: dist/*
