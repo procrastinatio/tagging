@@ -104,7 +104,7 @@ jobs:
       id: artifact_name
       run: |
         if [ "${{ github.ref }}" = "refs/heads/master" ]; then
-          NAME="tagging-v${{ steps.release.outputs.version }}"
+          NAME="tagging-v${{ steps.version.outputs.version }}"
         else
           NAME="tagging-${{ steps.dev_version.outputs.version }}"
         fi
