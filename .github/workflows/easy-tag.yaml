@@ -24,8 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install build python-semantic-release
         pip install -U setuptools setuptools_scm wheel
-    - name: Build package
-      run: python -m build
+    
       
     # Get version for master branch
     - name: Get Next Version
@@ -48,6 +47,9 @@ jobs:
           ID="dev-$SHA"
         fi
         echo "version=$ID" >> $GITHUB_OUTPUT
+        
+    - name: Build package
+      run: python -m build
 
     # Set artifact name based on context
     - name: Set Artifact Name
