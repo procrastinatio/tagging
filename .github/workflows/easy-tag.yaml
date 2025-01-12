@@ -84,18 +84,6 @@ jobs:
         echo "Git status:"
         git status
 
-    # For develop/PR, get version identifier
-    - name: Get Development ID
-      if: github.ref != 'refs/heads/master'
-      id: dev_version
-      run: |
-        SHA=$(git rev-parse --short HEAD)
-        if [ "${{ github.event_name }}" = "pull_request" ]; then
-          ID="pr-${{ github.event.pull_request.number }}-$SHA"
-        else
-          ID="dev-$SHA"
-        fi
-        echo "version=$ID" >> $GITHUB_OUTPUT
 
     # Build package AFTER version update
     - name: Build package
