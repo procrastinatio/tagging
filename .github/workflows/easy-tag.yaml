@@ -22,7 +22,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build python-semantic-release setuptools setuptools_scm wheel
+        pip install build python-semantic-release
+        pip install -U setuptools setuptools_scm wheel
     - name: Build package
       run: python -m build
       
